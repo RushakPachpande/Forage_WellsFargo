@@ -1,24 +1,32 @@
 package com.wellsfargo.counselor.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@Entity
-public class Advisor {
+public class Client {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "advisor_id")
-    private long advisorId;
+    @Column(name = "client_id")
+    private Long clientId;
+    
+    @ManyToOne
+    @JoinColumn(name = "advisor_id", nullable = false)  // Foreign Key
+    private Advisor advisor;
     
     @Column(nullable = false)
     private String firstName;
@@ -34,4 +42,8 @@ public class Advisor {
     
     @Column(nullable = false, unique = true)
     private String email;
+    
+    // One Client has One Portfolio
+    @OneToOne(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Portfolio portfolio;
 }
